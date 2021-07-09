@@ -228,24 +228,25 @@
 //     completed: false,
 // }
 
-interface Todo {
-    title: string;
-    description: string;
-    completed: boolean;
-    createdAt: number;
-}
+// interface Todo {
+//     title: string;
+//     description: string;
+//     completed: boolean;
+//     createdAt: number;
+// }
 
-type TodoPreview = Omit<Todo, 'description'>
+// type TodoPreview = Omit<Todo, 'description'>
 
-const todo: TodoPreview = {
-    title: "Clean room",
-    completed: false,
-    createdAt: 1165707819,
-}
+// const todo: TodoPreview = {
+//     title: "Clean room",
+//     completed: false,
+//     createdAt: 1165707819,
+// }
 
-type TodoInfo = Omit<Todo, 'completed' | 'createdAt'>
+// type TodoInfo = Omit<Todo, 'completed' | 'createdAt'> 
 
-const todo1: TodoInfo = {
-    title: "Clean room",
-    description: '11111'
-}
+// const todo1: TodoInfo = {
+//     title: "Clean room",
+//     description: '11111'
+// }
+
