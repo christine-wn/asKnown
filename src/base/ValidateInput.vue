@@ -1,72 +1,50 @@
 <template>
   <div class="validate-input-container pb-3">
-    <input
-      v-if="tag !== 'textarea'"
+    <input type="text"
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
-      @blur="validateInput"
       v-model="inputRef.val"
-      v-bind="$attrs"
-    />
-    <textarea
-      v-else
-      class="form-control"
-      :class="{ 'is-invalid': inputRef.error }"
       @blur="validateInput"
-      v-model="inputRef.val"
-      v-bind="$attrs"
-    />
-    <span v-if="inputRef.error" class="invalid-feedback">{{ inputRef.message }}</span>
+    >
+     <span v-if="inputRef.error" class="invalid-feedback">{{ inputRef.message }}</span>
   </div>
 </template>
-
 <script lang="ts">
-import { defineComponent, reactive, PropType, onMounted, computed } from 'vue'
-import { emitter } from './ValidateForm.vue'
-import { RuleProps } from '../store/types'
+import { defineComponent, reactive, PropType, onMounted } from 'vue'
+
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-export type RulesProps = RuleProps[]
-export type TagType = 'input' | 'textarea' | 'custom'
+
+interface RuleProp {
+  type: 'required' | 'email';
+  message: string;
+}
+
+export type RulesProp = RuleProp[]
+
 export default defineComponent({
   name: 'ValidateInput',
   props: {
-    rules: Array as PropType<RulesProps>,
-    modelValue: String,
-    tag: {
-      type: String as PropType<TagType>,
-      default: 'input'
-    }
+    rules: Array as PropType<RulesProp>
   },
-  // 禁止 attribute 继承
-  inheritAttrs: false,
-  setup (props, context) {
-    // todo https://v3.vuejs.org/guide/component-basics.html#using-v-model-on-components
+  setup(props) {
     const inputRef = reactive({
-      val: computed({
-        get: () => props.modelValue || '',
-        set: val => {
-          context.emit('update:modelValue', val)
-        }
-      }),
+      val: '',
       error: false,
       message: ''
     })
     const validateInput = () => {
-      if (props.rules) {
+      if(props.rules) {
         const allPassed = props.rules.every(rule => {
           let passed = true
           inputRef.message = rule.message
           switch (rule.type) {
-            case 'required':
+            case 'required': 
               passed = inputRef.val.trim() !== ''
               break
             case 'email':
               passed = emailReg.test(inputRef.val)
               break
-            case 'custom':
-              passed = passed = rule.validator ? rule.validator() : true
-              break
-            default:
+            default: 
               break
           }
           return passed
@@ -74,19 +52,15 @@ export default defineComponent({
         inputRef.error = !allPassed
         return allPassed
       }
-      return true
     }
     // 将事件发射出去，其实就是把验证函数发射出去
-    onMounted(() => {
-      emitter.emit('form-item-created', validateInput)
-    })
+    // onMounted(() => {
+    //   emitter.emit('form-item-created', validateInput)
+    // })
     return {
       inputRef,
       validateInput
     }
-  }
+  },
 })
 </script>
-
-<style scoped>
-</style>
