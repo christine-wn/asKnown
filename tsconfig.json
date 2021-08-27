@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "es5",             // 目标语言的版本
+    "module": "esnext",          // 指定生成代码的模板标准
+    "noImplicitAny": true,       // 不允许隐式的 any 类型
+    "removeComments": true,      // 删除注释 
+    "incremental": true, // TS编译器在第一次编译之后会生成一个存储编译信息的文件，第二次编译会在第一次的基础上进行增量编译，可以提高编译的速度
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
